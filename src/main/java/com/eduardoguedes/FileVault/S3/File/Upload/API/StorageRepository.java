@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
 public interface StorageRepository {
 
@@ -13,9 +14,9 @@ public interface StorageRepository {
 
   void store(MultipartFile file);
 
-//  default Stream<Path> loadAll() {
-//    return null;
-//  }
+   default Stream<Path> loadAll() {
+    return null;
+  }
 
   Path load(String filename);
 
