@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -30,14 +28,14 @@ public class FileSystemStorageService implements StorageRepository{
     this.rootLocation = Paths.get(properties.getLocation());
   }
 
-  @Override
-  public void init() {
-    try {
-      Files.createDirectory(rootLocation);
-    } catch (IOException exception) {
-      throw new StorageException("Could not initialize storage", exception);
-    }
-  }
+//  @Override
+//  public void init() {
+//    try {
+//      Files.createDirectory(rootLocation);
+//    } catch (IOException exception) {
+//      throw new StorageException("Could not initialize storage", exception);
+//    }
+//  }
 
   public void store(MultipartFile file) {
     try {
@@ -99,10 +97,10 @@ public class FileSystemStorageService implements StorageRepository{
 
   }
 
-  @Override
-  public void deleteAll() {
-    FileSystemUtils.deleteRecursively(rootLocation.toFile());
-  }
+  //@Override
+  //public void deleteAll() {
+    //FileSystemUtils.deleteRecursively(rootLocation.toFile());
+  //}
 
 
 }

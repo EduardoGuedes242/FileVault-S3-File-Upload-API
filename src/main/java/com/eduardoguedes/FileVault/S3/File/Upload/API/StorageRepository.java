@@ -10,11 +10,11 @@ import java.util.stream.Stream;
 
 public interface StorageRepository {
 
-  void init();
+  //void init();
 
   void store(MultipartFile file);
 
-   default Stream<Path> loadAll() {
+  default Stream<Path> loadAll() {
     return null;
   }
 
@@ -22,5 +22,5 @@ public interface StorageRepository {
 
   Resource loadAsResource(String filename);
 
-  void deleteAll();
+  //void deleteAll();
 }

@@ -15,12 +15,4 @@ public class FileVaultS3FileUploadApiApplication {
 		SpringApplication.run(FileVaultS3FileUploadApiApplication.class, args);
 	}
 
-	@Bean
-	CommandLineRunner init(StorageRepository storageRepository) {
-		return (args) -> {
-			storageRepository.deleteAll();
-			storageRepository.init();
-		};
-	}
-
 }
