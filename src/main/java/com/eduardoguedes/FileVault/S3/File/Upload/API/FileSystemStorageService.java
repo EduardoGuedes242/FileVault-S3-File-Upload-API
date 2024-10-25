@@ -28,15 +28,6 @@ public class FileSystemStorageService implements StorageRepository{
     this.rootLocation = Paths.get(properties.getLocation());
   }
 
-//  @Override
-//  public void init() {
-//    try {
-//      Files.createDirectory(rootLocation);
-//    } catch (IOException exception) {
-//      throw new StorageException("Could not initialize storage", exception);
-//    }
-//  }
-
   public void store(MultipartFile file) {
     try {
       if (file.isEmpty()) {
@@ -97,10 +88,17 @@ public class FileSystemStorageService implements StorageRepository{
 
   }
 
-  //@Override
-  //public void deleteAll() {
-    //FileSystemUtils.deleteRecursively(rootLocation.toFile());
-  //}
+  @Override
+  public void newDir(String dir) {
+    Path path = Paths.get(this.rootLocation.toString() + "/" + dir);
+    try {
+      Files.createDirectories(path);
+      System.out.println("Create new dir with success");
+    } catch (IOException error) {
+      System.out.println("Failed of create new dir: " + error.getMessage());
+      throw new StorageException("Failed to read stored files", error);
+    }
 
+  }
 
 }

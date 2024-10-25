@@ -36,27 +36,41 @@ public class FileUploadController {
       return ResponseEntity.ok().body(fileNames);
   }
 
-  @GetMapping("/download/{fileName:.+}")
-  public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) throws IOException {
-    // Carregar o arquivo a partir do serviço de armazenamento
-    Resource resource = storageRepository.loadAsResource(fileName);
+  @GetMapping("/download/{dir}/{fileName:.+}")
+  public ResponseEntity<Resource> downloadFile(
+           @PathVariable("dir") String dir
+          ,@PathVariable("fileName") String fileName) throws IOException {
+    Resource resource = storageRepository.loadAsResource(dir + "/" + fileName);
 
-    // Determina o tipo de arquivo (MIME type) dinamicamente
     Path filePath = resource.getFile().toPath();
     String contentType = Files.probeContentType(filePath);
 
-    // Caso o tipo de conteúdo não seja identificado, define um tipo padrão (opcional)
     if (contentType == null) {
-      contentType = "application/octet-stream";  // Tipo genérico para download
+      contentType = "application/octet-stream";
     }
 
-    // Retorna o arquivo com o cabeçalho correto para download
     return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
             .contentType(MediaType.parseMediaType(contentType))
             .body(resource);
   }
 
+  @GetMapping("/download/{fileName:.+}")
+  public ResponseEntity<Resource> downloadFile(@PathVariable() String fileName) throws IOException {
+    Resource resource = storageRepository.loadAsResource(fileName);
+
+    Path filePath = resource.getFile().toPath();
+    String contentType = Files.probeContentType(filePath);
+
+    if (contentType == null) {
+      contentType = "application/octet-stream";
+    }
+
+    return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+            .contentType(MediaType.parseMediaType(contentType))
+            .body(resource);
+  }
 
   @PostMapping("/upload")
   public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
@@ -66,5 +80,10 @@ public class FileUploadController {
     return new ResponseEntity<String>("File Import", HttpStatus.CREATED);
   }
 
+  @PostMapping("/new-dir")
+  public ResponseEntity<String> createNewDir(@RequestParam("name") String nameDir) {
+    storageRepository.newDir(nameDir);
+    return new ResponseEntity<String>("new dir create with success", HttpStatus.CREATED);
+  }
 
 }
