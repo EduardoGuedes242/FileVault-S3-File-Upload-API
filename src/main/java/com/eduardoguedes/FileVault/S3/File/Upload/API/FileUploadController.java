@@ -23,9 +23,9 @@ public class FileUploadController {
     this.storageRepository = storageRepository;
   }
 
-  @GetMapping("/list")
-  public ResponseEntity<List<String>> listAvailableFiles() {
-      List<String> fileNames = storageRepository.loadAll()
+  @GetMapping("/list/{path}")
+  public ResponseEntity<List<String>> listAvailableFiles(@PathVariable("path") String pathDir) {
+      List<String> fileNames = storageRepository.loadAll(pathDir)
               .map(path -> path.getFileName().toString())
               .collect(Collectors.toList());
 

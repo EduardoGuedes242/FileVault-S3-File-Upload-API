@@ -54,16 +54,17 @@ public class FileSystemStorageService implements StorageRepository{
   }
 
   @Override
-  public Stream<Path> loadAll() {
+  public Stream<Path> loadAll(String pathDir) {
     try {
-      return Files.walk(this.rootLocation, 1)
-              .filter(path -> !path.equals(this.rootLocation))
-              .map(this.rootLocation::relativize);
+      Path dirPath = this.rootLocation.resolve(Paths.get(pathDir)).normalize().toAbsolutePath();
+
+      return Files.walk(dirPath, 1)
+              .filter(path -> !path.equals(dirPath))
+              .map(dirPath::relativize);
     }
     catch (IOException e) {
       throw new StorageException("Failed to read stored files", e);
     }
-
   }
 
 

@@ -10,7 +10,7 @@ public interface StorageRepository {
 
   void store(String path, MultipartFile file);
 
-  default Stream<Path> loadAll() {
+  default Stream<Path> loadAll(String path) {
     return null;
   }
 
