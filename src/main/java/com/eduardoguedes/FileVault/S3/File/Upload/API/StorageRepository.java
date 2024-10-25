@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 public interface StorageRepository {
 
-  void store(MultipartFile file);
+  void store(String path, MultipartFile file);
 
   default Stream<Path> loadAll() {
     return null;

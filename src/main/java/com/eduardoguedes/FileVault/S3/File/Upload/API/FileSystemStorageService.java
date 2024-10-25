@@ -1,5 +1,8 @@
 package com.eduardoguedes.FileVault.S3.File.Upload.API;
 
+import com.eduardoguedes.FileVault.S3.File.Upload.API.infra.exception.StorageException;
+import com.eduardoguedes.FileVault.S3.File.Upload.API.infra.exception.StorageFileNotFoundException;
+import com.eduardoguedes.FileVault.S3.File.Upload.API.infra.properties.StorageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -28,26 +31,26 @@ public class FileSystemStorageService implements StorageRepository{
     this.rootLocation = Paths.get(properties.getLocation());
   }
 
-  public void store(MultipartFile file) {
+  @Override
+  public void store(String path, MultipartFile file) {
     try {
       if (file.isEmpty()) {
         throw new StorageException("Failed to store empty file.");
       }
-      Path destinationFile = this.rootLocation.resolve(Paths.get(file.getOriginalFilename()))
+
+      Path destinationFile = this.rootLocation.resolve(Paths.get(path, file.getOriginalFilename()))
               .normalize().toAbsolutePath();
 
-      if(!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
+      if (!destinationFile.startsWith(this.rootLocation.toAbsolutePath())) {
         throw new StorageException("Cannot store file outside current directory");
       }
 
-      try(InputStream inputStream = file.getInputStream()) {
+      try (InputStream inputStream = file.getInputStream()) {
         Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
       }
-
     } catch (IOException exception) {
       throw new StorageException("Failed to store file", exception);
     }
-
   }
 
   @Override

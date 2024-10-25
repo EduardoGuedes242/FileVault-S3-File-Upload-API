@@ -1,4 +1,4 @@
-package com.eduardoguedes.FileVault.S3.File.Upload.API;
+package com.eduardoguedes.FileVault.S3.File.Upload.API.infra.exception;
 
 public class StorageException extends RuntimeException{
 
